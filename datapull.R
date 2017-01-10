@@ -9,7 +9,7 @@ datapull <- function(x,d,p){
   getopprice(y,d,cp,1)
   getopprice(z,d,pp,2)
 }
-getopprice(x,d,p,o){
+getopprice<-function(x,d,p,o){
   if(o==1){
     if(p>x[match(d,x$Date),17]){
       val<-x[match(d,x$Date),10]
