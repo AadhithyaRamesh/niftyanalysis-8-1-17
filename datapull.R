@@ -12,7 +12,7 @@ getopprice<-function(x,d,ed,p,o){
     else{
       val<-(p-x[match(ed,x$Date),17])
     }
-    print(val)
+    #print(val)
   }
   else{
     if(p<x[match(ed,x$Date),17]){
@@ -21,7 +21,7 @@ getopprice<-function(x,d,ed,p,o){
     else{
       val<-(x[match(ed,x$Date),17]-p)
     }
-    print(val)
+    #print(val)
   }
   val
 }
@@ -34,18 +34,17 @@ datapull <- function(x,d,p){
   #print(op)
   return(op)
 }
-calcpnl<-function(x){
-  dates<-c("15-Jan-2016","15-Feb-2016","15-Mar-2016","15-Apr-2016","15-May-2016","15-Jun-2016","15-Jul-2016","15-Aug-2016","15-Sep-2016","15-Oct-2016","15-Nov-2016")
+calcpnl<-function(x,d="15",pe=4.25){
+  dates<-c(paste(d,"-Jan-2016",sep=""),paste(d,"-Feb-2016",sep=""),paste(d,"-Mar-2016",sep=""),paste(d,"-Apr-2016",sep=""),paste(d,"-May-2016",sep=""),paste(d,"-Jun-2016",sep=""),paste(d,"-Jul-2016",sep=""),paste(d,"-Aug-2016",sep=""),paste(d,"-Sep-2016",sep=""),paste(d,"-Oct-2016",sep=""),paste(d,"-Nov-2016",sep=""))
   expdates<-c("25-Feb-2016","31-Mar-2016","28-Apr-2016","26-May-2016","30-Jun-2016","28-Jul-2016","25-Aug-2016","29-Sep-2016","27-Oct-2016","24-Nov-2016","29-Dec-2016")
-  #c7800Feb<-read.csv("C:/github local reps/niftyanalysis-8-1-17/nifty2016feb.csv")
-  #print(c7800Feb)
   p<-0
+  c<-0
   for(i in 1:length(dates)){
-    #print(i)
-    sp<-datapull(x,dates[i],4.25)
-    p<-p+getopprice(read.csv(paste("C:/github local reps/niftyanalysis-8-1-17/","c",as.character(sp[1]),substring(expdates[i],4,6),".csv",sep="")),dates[i],expdates[i],sp[1],1)+getopprice(read.csv(paste("C:/github local reps/niftyanalysis-8-1-17/","p",as.character(sp[2]),substring(expdates[i],4,6),".csv",sep="")),dates[i],expdates[i],sp[2],2)
-    print(p)
+    sp<-datapull(x,dates[i],pe)
+    p<-p+getopprice(read.csv(paste("c",as.character(sp[1]),substring(expdates[i],4,6),".csv",sep="")),dates[i],expdates[i],sp[1],1)
+    c<-c+getopprice(read.csv(paste("p",as.character(sp[2]),substring(expdates[i],4,6),".csv",sep="")),dates[i],expdates[i],sp[2],2)
+    print(paste(substring(expdates[i],4,6),"put profit",getopprice(read.csv(paste("c",as.character(sp[1]),substring(expdates[i],4,6),".csv",sep="")),dates[i],expdates[i],sp[1],1)))
+    print(paste(substring(expdates[i],4,6),"call profit",getopprice(read.csv(paste("p",as.character(sp[2]),substring(expdates[i],4,6),".csv",sep="")),dates[i],expdates[i],sp[2],2)))
   }
-  #p<-getopprice(read.csv(paste("C:/github local reps/niftyanalysis-8-1-17/nifty2016feb.csv")),dates[1],7800,1)
-  return(p)
+  return(p+c)
 }
